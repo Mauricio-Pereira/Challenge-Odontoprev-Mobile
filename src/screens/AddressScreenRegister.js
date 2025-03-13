@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import styles from "../styles/addressStyles";
 import { formatCEP } from "../utils/formatters";
@@ -160,6 +162,11 @@ export default function AddressScreenRegister({ navigation, route }) {
   }
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 0 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} // ajuste esse valor conforme necessário
+    >
     <ScrollView contentContainerStyle={styles.container}>
 
       <View style={styles.headerContainer}>
@@ -273,5 +280,6 @@ export default function AddressScreenRegister({ navigation, route }) {
         <Text style={styles.finalizeButtonText}>Dados de Conta</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

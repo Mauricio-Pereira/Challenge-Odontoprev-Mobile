@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import styles from "../styles/personalDataStyles";
 import CPFInput from "../components/CPFInput";
@@ -75,63 +77,68 @@ export default function PersonalDataScreenRegister({ navigation }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <KeyboardAvoidingView
+      style={{ flex: 0 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} // ajuste esse valor conforme necessário
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>Dados Pessoais</Text>
+          <TouchableOpacity
+            style={styles.closeButtonContainer}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Dados Pessoais</Text>
-        <TouchableOpacity
-          style={styles.closeButtonContainer}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.closeButtonText}>X</Text>
+        <Text style={styles.label}>Nome</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu primeiro nome"
+          placeholderTextColor={styles.placeholderColor.color}
+          value={nome}
+          onChangeText={setNome}
+        />
+        {nomeError ? <Text style={styles.errorText}>{nomeError}</Text> : null}
+
+        <Text style={styles.label}>Sobrenome</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu último nome"
+          placeholderTextColor={styles.placeholderColor.color}
+          value={sobrenome}
+          onChangeText={setSobrenome}
+        />
+        {sobrenomeError ? (
+          <Text style={styles.errorText}>{sobrenomeError}</Text>
+        ) : null}
+
+        <CPFInput
+          containerStyle={{ marginBottom: 16 }}
+          inputStyle={styles.input}
+          placeholderTextColor={styles.placeholderColor.color}
+          value={cpf}
+          onChangeText={setCpf}
+        />
+        {cpfError ? <Text style={styles.errorText}>{cpfError}</Text> : null}
+
+        <DateInput
+          containerStyle={{ marginBottom: 16 }}
+          inputStyle={styles.input}
+          placeholderTextColor={styles.placeholderColor.color}
+          value={dataNasc}
+          onChangeText={setDataNasc}
+        />
+        {dataNascError ? (
+          <Text style={styles.errorText}>{dataNascError}</Text>
+        ) : null}
+
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.nextButtonText}>Endereço</Text>
         </TouchableOpacity>
-      </View>
-
-      <Text style={styles.label}>Nome</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu primeiro nome"
-        placeholderTextColor={styles.placeholderColor.color}
-        value={nome}
-        onChangeText={setNome}
-      />
-      {nomeError ? <Text style={styles.errorText}>{nomeError}</Text> : null}
-
-      <Text style={styles.label}>Sobrenome</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu último nome"
-        placeholderTextColor={styles.placeholderColor.color}
-        value={sobrenome}
-        onChangeText={setSobrenome}
-      />
-      {sobrenomeError ? (
-        <Text style={styles.errorText}>{sobrenomeError}</Text>
-      ) : null}
-
-      <CPFInput
-        containerStyle={{ marginBottom: 16 }}
-        inputStyle={styles.input}
-        placeholderTextColor={styles.placeholderColor.color}
-        value={cpf}
-        onChangeText={setCpf}
-      />
-      {cpfError ? <Text style={styles.errorText}>{cpfError}</Text> : null}
-
-      <DateInput
-        containerStyle={{ marginBottom: 16 }}
-        inputStyle={styles.input}
-        placeholderTextColor={styles.placeholderColor.color}
-        value={dataNasc}
-        onChangeText={setDataNasc}
-      />
-      {dataNascError ? (
-        <Text style={styles.errorText}>{dataNascError}</Text>
-      ) : null}
-
-      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-        <Text style={styles.nextButtonText}>Endereço</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

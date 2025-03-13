@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import styles from "../styles/accountDataScreen";
-import { ScrollView } from "react-native";
-import Header from "../components/Header";
 
 export default function AccountDataScreen({ navigation, route }) {
   const {
@@ -26,11 +32,9 @@ export default function AccountDataScreen({ navigation, route }) {
 
   const [emailError, setEmailError] = useState("");
   const [telefoneError, setTelefoneError] = useState("");
+  const [senhaEmptyError, setSenhaEmptyError] = useState("");
   const [confirmSenhaError, setConfirmSenhaError] = useState("");
 
-  // Lista de requisitos da senha, cada item possui:
-  // 1) texto de exibição
-  // 2) função que valida o texto da senha
   const passwordRequirements = [
     {
       text: "Mínimo de 8 dígitos",
@@ -54,7 +58,6 @@ export default function AccountDataScreen({ navigation, route }) {
     },
   ];
 
-  // Função para formatar o telefone conforme o usuário digita
   function formatPhone(text) {
     let cleaned = text.replace(/\D/g, "");
     if (cleaned.length > 11) cleaned = cleaned.substring(0, 11);
@@ -77,7 +80,9 @@ export default function AccountDataScreen({ navigation, route }) {
   function validateEmail(text) {
     setEmail(text);
     const regex = /\S+@\S+\.\S+/;
-    if (!regex.test(text)) {
+    if (text.trim() === "") {
+      setEmailError("Campo obrigatório");
+    } else if (!regex.test(text)) {
       setEmailError("Email inválido");
     } else {
       setEmailError("");
@@ -85,12 +90,12 @@ export default function AccountDataScreen({ navigation, route }) {
   }
 
   function validateTelefone(text) {
-    // Formata e atualiza o estado
     const formatted = formatPhone(text);
     setTelefone(formatted);
-    // Validação: removendo caracteres não numéricos para contar os dígitos
     const cleaned = text.replace(/\D/g, "");
-    if (cleaned.length < 10 || cleaned.length > 11) {
+    if (text.trim() === "") {
+      setTelefoneError("Campo obrigatório");
+    } else if (cleaned.length < 10 || cleaned.length > 11) {
       setTelefoneError("Telefone inválido");
     } else {
       setTelefoneError("");
@@ -99,8 +104,7 @@ export default function AccountDataScreen({ navigation, route }) {
 
   function validateSenha(text) {
     setSenha(text);
-
-    // Se já houver confirmação, verifica se coincidem
+    // Se houver valor vazio, não limpa a mensagem de "Campo obrigatório" definida no handle
     if (confirmSenha && text !== confirmSenha) {
       setConfirmSenhaError("As senhas não coincidem");
     } else {
@@ -110,7 +114,9 @@ export default function AccountDataScreen({ navigation, route }) {
 
   function validateConfirmSenha(text) {
     setConfirmSenha(text);
-    if (senha !== text) {
+    if (text.trim() === "") {
+      setConfirmSenhaError("Campo obrigatório");
+    } else if (senha !== text) {
       setConfirmSenhaError("As senhas não coincidem");
     } else {
       setConfirmSenhaError("");
@@ -118,14 +124,35 @@ export default function AccountDataScreen({ navigation, route }) {
   }
 
   function handleCreateAccount() {
-    // Verifica se ainda há erros básicos antes de criar a conta
-    if (emailError || telefoneError || confirmSenhaError) return;
-
-    // Verifica se todos os requisitos de senha estão OK
+    let valid = true;
+    // Valida campo Email
+    if (email.trim() === "") {
+      setEmailError("Campo obrigatório");
+      valid = false;
+    }
+    // Valida campo Telefone
+    if (telefone.trim() === "") {
+      setTelefoneError("Campo obrigatório");
+      valid = false;
+    }
+    // Valida campo Senha
+    if (senha.trim() === "") {
+      setSenhaEmptyError("Campo obrigatório");
+      valid = false;
+    }
+    // Valida campo Confirmação
+    if (confirmSenha.trim() === "") {
+      setConfirmSenhaError("Campo obrigatório");
+      valid = false;
+    }
+    // Valida requisitos da senha
     const allRequirementsMet = passwordRequirements.every((req) =>
       req.validate(senha)
     );
-    if (!allRequirementsMet) return;
+    if (!allRequirementsMet) {
+      valid = false;
+    }
+    if (!valid) return;
 
     navigation.navigate("FinalRegistration", {
       nome,
@@ -147,104 +174,112 @@ export default function AccountDataScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Dados da Conta</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 0 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} // ajuste esse valor conforme necessário
+    >
+      <ScrollView>
+        <View style={styles.container}>
+          {/* Cabeçalho */}
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerTitle}>Dados da Conta</Text>
+            <TouchableOpacity
+              style={styles.closeButtonContainer}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* EMAIL */}
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="email@exemplo.com"
+            placeholderTextColor={styles.placeholderColor.color}
+            value={email}
+            onChangeText={validateEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
+
+          {/* TELEFONE */}
+          <Text style={styles.label}>Telefone</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="(xx) xxxxx-xxxx"
+            placeholderTextColor={styles.placeholderColor.color}
+            value={telefone}
+            onChangeText={validateTelefone}
+            keyboardType="phone-pad"
+          />
+          {telefoneError ? (
+            <Text style={styles.errorText}>{telefoneError}</Text>
+          ) : null}
+
+          {/* SENHA */}
+          <Text style={styles.label}>Digite a sua senha</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="com no mínimo 8 dígitos"
+            placeholderTextColor={styles.placeholderColor.color}
+            value={senha}
+            onChangeText={validateSenha}
+            secureTextEntry
+          />
+          {/* Lista de requisitos da senha */}
+          <View style={{ marginVertical: 5 }}>
+            {passwordRequirements.map((req, index) => {
+              const isValid = req.validate(senha);
+              return (
+                <View
+                  key={index}
+                  style={{ flexDirection: "row", marginBottom: 2 }}
+                >
+                  {/* bullet point */}
+                  <Text
+                    style={{
+                      color: isValid ? "green" : "red",
+                      marginRight: 5,
+                    }}
+                  >
+                    •
+                  </Text>
+                  <Text style={{ color: isValid ? "green" : "red" }}>
+                    {req.text}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
+          {/* CONFIRMAR SENHA */}
+          <Text style={styles.label}>Confirme a sua senha</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="digite novamente sua senha"
+            placeholderTextColor={styles.placeholderColor.color}
+            value={confirmSenha}
+            onChangeText={validateConfirmSenha}
+            secureTextEntry
+          />
+          {confirmSenhaError ? (
+            <Text style={styles.errorText}>{confirmSenhaError}</Text>
+          ) : null}
+
+          {/* BOTÃO CRIAR CONTA */}
           <TouchableOpacity
-            style={styles.closeButtonContainer}
-            onPress={() => navigation.navigate("Login")}
+            style={styles.createButton}
+            onPress={handleCreateAccount}
           >
-            <Text style={styles.closeButtonText}>X</Text>
+            <Text style={styles.createButtonText}>Criar conta</Text>
           </TouchableOpacity>
         </View>
-
-        {/* EMAIL */}
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="email@exemplo.com"
-          placeholderTextColor={styles.placeholderColor.color}
-          value={email}
-          onChangeText={validateEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-        {/* TELEFONE */}
-        <Text style={styles.label}>Telefone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="(xx) xxxxx-xxxx"
-          placeholderTextColor={styles.placeholderColor.color}
-          value={telefone}
-          onChangeText={validateTelefone}
-          keyboardType="phone-pad"
-        />
-        {telefoneError ? (
-          <Text style={styles.errorText}>{telefoneError}</Text>
-        ) : null}
-
-        {/* SENHA */}
-        <Text style={styles.label}>Digite a sua senha</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="com no mínimo 8 dígitos"
-          placeholderTextColor={styles.placeholderColor.color}
-          value={senha}
-          onChangeText={validateSenha}
-          secureTextEntry
-        />
-        {/* Lista de requisitos da senha */}
-        <View style={{ marginVertical: 5 }}>
-          {passwordRequirements.map((req, index) => {
-            const isValid = req.validate(senha);
-            return (
-              <View
-                key={index}
-                style={{ flexDirection: "row", marginBottom: 2 }}
-              >
-                {/* bullet point */}
-                <Text
-                  style={{
-                    color: isValid ? "green" : "red",
-                    marginRight: 5,
-                  }}
-                >
-                  •
-                </Text>
-                <Text style={{ color: isValid ? "green" : "red" }}>
-                  {req.text}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-
-        {/* CONFIRMAR SENHA */}
-        <Text style={styles.label}>Confirme a sua senha</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="digite novamente sua senha"
-          placeholderTextColor={styles.placeholderColor.color}
-          value={confirmSenha}
-          onChangeText={validateConfirmSenha}
-          secureTextEntry
-        />
-        {confirmSenhaError ? (
-          <Text style={styles.errorText}>{confirmSenhaError}</Text>
-        ) : null}
-
-        {/* BOTÃO CRIAR CONTA */}
-        <TouchableOpacity
-          style={styles.createButton}
-          onPress={handleCreateAccount}
-        >
-          <Text style={styles.createButtonText}>Criar conta</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
