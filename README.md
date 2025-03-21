@@ -63,6 +63,8 @@ Challenge-Odontoprev-Mobile/
 ├── app.json                    # Configurações do Expo
 ├── index.js                    # Arquivo de inicialização do aplicativo
 └── package.json                # Dependências e scripts NPM
+
+
 ```
 
 ## Iniciando o Projeto
@@ -71,7 +73,7 @@ Siga estes passos para configurar e executar o projeto localmente:
 
 1. **Clonar o Repositório**  
    ```sh
-   git clone <url_do_repositorio>
+   git clone https://github.com/Mauricio-Pereira/Challenge-Odontoprev-Mobile
    cd Challenge-Odontoprev-Mobile
    ```
 
