@@ -1,0 +1,72 @@
+strict digraph "dependency-cruiser output" {
+    edge [
+      dir=none,
+      arrowhead=none,
+      arrowtail=none,
+      arrowsize="0.6",
+      penwidth="2.0",
+      color="#00000033",
+      fontname="Helvetica",
+      fontsize="9"
+    ];
+
+    rankdir="LR" splines="true" overlap="false" nodesep="0.16" ranksep="0.18" fontname="Helvetica-bold" fontsize="9" style="rounded,bold,filled" fillcolor="#ffffff" compound="true"
+    node [shape="box" style="rounded, filled" height="0.2" color="black" fillcolor="#ffffcc" fontcolor="black" fontname="Helvetica" fontsize="9"]
+
+    "App.js" [label=<App.js> tooltip="App.js" URL="App.js" ]
+    "App.js" -> "src/navigation/StackNavigator.js"
+    "index.js" [label=<index.js> tooltip="index.js" URL="index.js" ]
+    "index.js" -> "App.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/components" {label="components" "src/components/CPFInput.js" [label=<CPFInput.js> tooltip="CPFInput.js" URL="src/components/CPFInput.js" ] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/components" {label="components" "src/components/DateInput.js" [label=<DateInput.js> tooltip="DateInput.js" URL="src/components/DateInput.js" ] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/components" {label="components" "src/components/Header.js" [label=<Header.js> tooltip="Header.js" URL="src/components/Header.js" ] } }
+    "src/components/Header.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/navigation" {label="navigation" "src/navigation/StackNavigator.js" [label=<StackNavigator.js> tooltip="StackNavigator.js" URL="src/navigation/StackNavigator.js" ] } }
+    "src/navigation/StackNavigator.js" -> "src/components/Header.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/AccountDataScreen.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/AddressScreenRegister.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/FinalRegistrationScreen.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/HomeScreen.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/LoginScreen.js"
+    "src/navigation/StackNavigator.js" -> "src/screens/PersonalDataScreenRegister.js"
+    "src/navigation/StackNavigator.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/AccountDataScreen.js" [label=<AccountDataScreen.js> tooltip="AccountDataScreen.js" URL="src/screens/AccountDataScreen.js" ] } }
+    "src/screens/AccountDataScreen.js" -> "src/styles/accountDataScreen.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/AddressScreenRegister.js" [label=<AddressScreenRegister.js> tooltip="AddressScreenRegister.js" URL="src/screens/AddressScreenRegister.js" ] } }
+    "src/screens/AddressScreenRegister.js" -> "src/components/Header.js"
+    "src/screens/AddressScreenRegister.js" -> "src/styles/addressStyles.js"
+    "src/screens/AddressScreenRegister.js" -> "src/utils/formatters.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/FinalRegistrationScreen.js" [label=<FinalRegistrationScreen.js> tooltip="FinalRegistrationScreen.js" URL="src/screens/FinalRegistrationScreen.js" ] } }
+    "src/screens/FinalRegistrationScreen.js" -> "src/styles/finalRegistrationStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/HomeScreen.js" [label=<HomeScreen.js> tooltip="HomeScreen.js" URL="src/screens/HomeScreen.js" ] } }
+    "src/screens/HomeScreen.js" -> "src/components/Header.js"
+    "src/screens/HomeScreen.js" -> "src/styles/homeStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/LoginScreen.js" [label=<LoginScreen.js> tooltip="LoginScreen.js" URL="src/screens/LoginScreen.js" ] } }
+    "src/screens/LoginScreen.js" -> "src/components/Header.js"
+    "src/screens/LoginScreen.js" -> "src/styles/loginStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/screens" {label="screens" "src/screens/PersonalDataScreenRegister.js" [label=<PersonalDataScreenRegister.js> tooltip="PersonalDataScreenRegister.js" URL="src/screens/PersonalDataScreenRegister.js" ] } }
+    "src/screens/PersonalDataScreenRegister.js" -> "src/components/CPFInput.js"
+    "src/screens/PersonalDataScreenRegister.js" -> "src/components/DateInput.js"
+    "src/screens/PersonalDataScreenRegister.js" -> "src/components/Header.js"
+    "src/screens/PersonalDataScreenRegister.js" -> "src/styles/personalDataStyles.js"
+    "src/screens/PersonalDataScreenRegister.js" -> "src/utils/formatters.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/accountDataScreen.js" [label=<accountDataScreen.js> tooltip="accountDataScreen.js" URL="src/styles/accountDataScreen.js" ] } }
+    "src/styles/accountDataScreen.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/addressStyles.js" [label=<addressStyles.js> tooltip="addressStyles.js" URL="src/styles/addressStyles.js" ] } }
+    "src/styles/addressStyles.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/colors.js" [label=<colors.js> tooltip="colors.js" URL="src/styles/colors.js" ] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/finalRegistrationStyles.js" [label=<finalRegistrationStyles.js> tooltip="finalRegistrationStyles.js" URL="src/styles/finalRegistrationStyles.js" ] } }
+    "src/styles/finalRegistrationStyles.js" -> "src/styles/colors.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/globalStyles.js" [label=<globalStyles.js> tooltip="globalStyles.js" URL="src/styles/globalStyles.js" ] } }
+    "src/styles/globalStyles.js" -> "src/styles/colors.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/homeStyles.js" [label=<homeStyles.js> tooltip="homeStyles.js" URL="src/styles/homeStyles.js" ] } }
+    "src/styles/homeStyles.js" -> "src/styles/colors.js"
+    "src/styles/homeStyles.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/loginStyles.js" [label=<loginStyles.js> tooltip="loginStyles.js" URL="src/styles/loginStyles.js" ] } }
+    "src/styles/loginStyles.js" -> "src/styles/colors.js"
+    "src/styles/loginStyles.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/styles" {label="styles" "src/styles/personalDataStyles.js" [label=<personalDataStyles.js> tooltip="personalDataStyles.js" URL="src/styles/personalDataStyles.js" ] } }
+    "src/styles/personalDataStyles.js" -> "src/styles/globalStyles.js"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/utils" {label="utils" "src/utils/formatters.js" [label=<formatters.js> tooltip="formatters.js" URL="src/utils/formatters.js" ] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/utils" {label="utils" "src/utils/validations.js" [label=<validations.js> tooltip="validations.js" URL="src/utils/validations.js" fillcolor="#ccffcc"] } }
+}

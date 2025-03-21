@@ -2,7 +2,10 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import globalStyles from "../styles/globalStyles";
 
-export default function Header({ navigation }) {
+export default function Header({ navigation, route }) {
+  // Verifica se a rota atual é "Home"
+  const isHomePage = route.name === "Home";
+
   return (
     <View style={globalStyles.header}>
       <View style={[globalStyles.headerLeft, { flex: 1 }]}>
@@ -17,12 +20,17 @@ export default function Header({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Garante que o botão de login fique visível */}
       <TouchableOpacity
         style={{ paddingHorizontal: 12 }}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() =>
+          isHomePage
+            ? navigation.navigate("Login") // Aqui você pode chamar a função de logout
+            : navigation.navigate("Login")
+        }
       >
-        <Text style={globalStyles.headerLoginButton}>Login</Text>
+        <Text style={globalStyles.headerLoginButton}>
+          {isHomePage ? "Logout" : "Login"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
