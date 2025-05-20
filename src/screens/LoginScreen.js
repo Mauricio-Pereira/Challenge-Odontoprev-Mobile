@@ -7,19 +7,34 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
+import { loginUser } from "../services/userService";
 import styles from "../styles/loginStyles";
 import { ScrollView } from "react-native";
 import Header from "../components/Header";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  function handleLogin() {
-    // Lógica de login
-    navigation.navigate("Home");
+  async function handleLogin() {
+  try {
+    const user = await loginUser(email, senha);
+    await AsyncStorage.setItem('usuarioLogado', JSON.stringify(user));
+
+    console.log("Usuário logado:", user);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Home' }], 
+    });
+  } catch (error) {
+    console.error("Erro no login:", error.response?.status || error.message);
+    Alert.alert("Erro", "Email ou senha inválidos.");
   }
+}
 
   return (
     <KeyboardAvoidingView

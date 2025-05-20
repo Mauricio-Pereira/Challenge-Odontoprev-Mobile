@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import styles from "../styles/homeStyles";
 import Header from "../components/Header";
 
 export default function HomeScreen({ navigation }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const verificarAdmin = async () => {
+      try {
+        const dados = await AsyncStorage.getItem("usuarioLogado");
+        const usuario = JSON.parse(dados);
+        if (usuario?.tipoUsuario === "Administrador") {
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.error("Erro ao verificar admin:", error);
+      }
+    };
+    verificarAdmin();
+  }, []);
+
   return (
     <View style={styles.container}>
-
+      {isAdmin && (
+          <TouchableOpacity
+            style={[
+              styles.bigCardButton,
+              { marginTop: 20, marginHorizontal: 16, marginBottom: 20},
+            ]}
+            onPress={() => navigation.navigate("Usuarios")}
+          >
+            <Text style={styles.bigCardButtonText}>Usuários Cadastrados</Text>
+          </TouchableOpacity>
+        )}
       <ScrollView
         style={styles.contentContainer}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -56,7 +84,8 @@ export default function HomeScreen({ navigation }) {
           Dicas para evitar fraudes em planos odontológicos
         </Text>
         <Text style={styles.paragraph}>
-          Fraudes em planos odontológicos podem causar grandes prejuízos. Confira algumas dicas para se proteger:
+          Fraudes em planos odontológicos podem causar grandes prejuízos.
+          Confira algumas dicas para se proteger:
         </Text>
         <View style={styles.tipContainer}>
           <Image
@@ -82,9 +111,11 @@ export default function HomeScreen({ navigation }) {
             style={styles.tipImage}
           />
           <Text style={styles.tipText}>
-            Fique atento a cobranças fora do padrão e a procedimentos não autorizados.
+            Fique atento a cobranças fora do padrão e a procedimentos não
+            autorizados.
           </Text>
         </View>
+        
       </ScrollView>
 
       {/* Barra de navegação inferior */}

@@ -5,9 +5,12 @@ import HomeScreen from "../screens/HomeScreen";
 import PersonalDataScreenRegister from "../screens/PersonalDataScreenRegister";
 import AddressScreenRegister from "../screens/AddressScreenRegister";
 import AccountDataScreen from "../screens/AccountDataScreen";
+import UsersScreen from "../screens/UsersScreen";
 import FinalRegistrationScreen from "../screens/FinalRegistrationScreen";
 import Header from "../components/Header";
 import styles from "../styles/globalStyles";
+import EditUserScreen from "../screens/EditUserScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +32,8 @@ export default function StackNavigator() {
         <Stack.Screen name="Address" component={AddressScreenRegister} />
         <Stack.Screen name="AccountData" component={AccountDataScreen} />
         <Stack.Screen name="FinalRegistration" component={FinalRegistrationScreen} />
+        <Stack.Screen name="Usuarios" component={UsersScreen} />
+        <Stack.Screen name="EditarUsuario" component={EditUserScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

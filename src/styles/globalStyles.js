@@ -87,6 +87,8 @@ export default StyleSheet.create({
     borderRadius: 24,
     paddingVertical: 14,
     alignItems: "center",
+    marginBottom: 16,
+
   },
   buttonText: {
     color: "#FFF",

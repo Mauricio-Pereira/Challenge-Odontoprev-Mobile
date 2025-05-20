@@ -1,6 +1,6 @@
 # Challenge Odontoprev Mobile
 
-Aplicativo mobile desenvolvido em React Native e Expo para gerenciar procedimentos odontológicos e prevenir fraudes. Este app conta com autenticação de usuário, inputs dinâmicos com máscaras, integração de busca de CEP para preenchimento automático de endereços e uma estrutura de projeto modular.
+Aplicativo mobile desenvolvido em React Native com Expo, focado na prevenção de fraudes em procedimentos odontológicos. O app permite cadastro de usuários, login seguro, visualização e gerenciamento de usuários (CRUD), integração com uma API Java Spring Boot, e persistência de dados usando Async Storage.
 
 ## Sumário
 - [Funcionalidades](#funcionalidades)
@@ -14,136 +14,149 @@ Aplicativo mobile desenvolvido em React Native e Expo para gerenciar procediment
 - [Licença](#licença)
 
 ## Funcionalidades
-- **Autenticação e Criação de Conta:** Processos de cadastro e login de forma segura.  
-- **Navegação Personalizada:** Fluxo de navegação fluido com React Navigation.  
-- **Máscaras de Input:** Campos de CPF, data e telefone usando componentes de máscara.  
-- **Busca de CEP:** Integração para preenchimento automático de endereço.  
-- **Design Modular:** Componentes, telas, estilos e funções utilitárias bem organizados.
+
+- **CRUD Completo de Usuários:** Listagem paginada, criação, edição e exclusão de usuários cadastrados.
+- **Integração com API Spring Boot:** Todas as ações CRUD são integradas à API Java com persistência real de dados.
+- **Login e Autenticação:** Login via API com senhas criptografadas e gerenciamento de sessão com Async Storage.
+- **Acesso Restrito por Perfil:** Apenas usuários administradores visualizam e gerenciam usuários cadastrados.
+- **Formulários com Máscaras:** Campos com máscaras para CPF, telefone e data de nascimento.
+- **Busca de CEP Automatizada:** Preenchimento automático de endereço com base no CEP.
+- **Navegação Personalizada:** Stack navigation com headers customizados e logout funcional.
+- **Design Responsivo e Modular:** Componentes reaproveitáveis, estilos separados e estrutura organizada.
 
 ## Estrutura do Projeto
-O projeto foi organizado para ser escalável e de fácil manutenção:
 
 ```
+
 Challenge-Odontoprev-Mobile/
 │
-├── .expo/                      # Configurações e assets do Expo
-├── assets/                     # Imagens, fontes e outros recursos
+├── assets/                     # Imagens e logos
 ├── src/
-│   ├── components/             # Componentes reutilizáveis de UI
-│   │   ├── CPFInput.js
-│   │   ├── DateInput.js
-│   │   └── Header.js
-│   │
-│   ├── navigation/             # Configurações de navegação
-│   │   └── StackNavigator.js
-│   │
-│   ├── screens/                # Telas do aplicativo
-│   │   ├── LoginScreen.js
-│   │   ├── HomeScreen.js
-│   │   ├── PersonalDataScreenRegister.js
-│   │   ├── AddressScreenRegister.js
-│   │   ├── AccountDataScreen.js
-│   │   └── FinalRegistrationScreen.js
-│   │
-│   ├── styles/                 # Arquivos de estilo para componentes e telas
-│   │   ├── accountDataScreen.js
-│   │   ├── addressStyles.js
-│   │   ├── colors.js
-│   │   ├── finalRegistrationStyles.js
-│   │   ├── globalStyles.js
-│   │   ├── homeStyles.js
-│   │   ├── loginStyles.js
-│   │   └── personalDataStyles.js
-│   │
-│   └── utils/                  # Funções de validação e formatação
-│       ├── formatters.js
-│       └── validations.js
-│
-├── App.js                      # Ponto de entrada principal do aplicativo
+│   ├── components/             # Componentes reutilizáveis (ex: Header)
+│   ├── navigation/             # Stack Navigator
+│   ├── screens/                # Telas: Login, Cadastro, Home, Usuários, etc.
+│   ├── services/               # Configuração de chamadas à API externa
+│   ├── styles/                 # Estilos organizados por tela
+│   └── utils/                  # Validações e formatadores
+├── App.js                      # Entrada principal
 ├── app.json                    # Configurações do Expo
-├── index.js                    # Arquivo de inicialização do aplicativo
-└── package.json                # Dependências e scripts NPM
+└── package.json                # Dependências e scripts
 
+````
 
+### 🧩 Integração com o Backend (Java API)
+
+Este projeto depende do backend desenvolvido em Java, disponível em:
+
+🔗 **[FraudWatch-Java - GitHub](https://github.com/Mauricio-Pereira/FraudWatch-Java)**
+
+#### Como rodar o backend:
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/Mauricio-Pereira/FraudWatch-Java
+cd FraudWatch-Java
 ```
+
+2. Rode com Docker Compose:
+
+```bash
+docker-compose up --build
+```
+
+> Isso irá subir a API Java Spring Boot juntamente com o banco de dados Oracle e outras dependências.
+
+#### ⚠️ Ajuste necessário no App Mobile:
+
+Para que o app mobile consiga acessar a API Java corretamente via rede local (por exemplo, testando no celular com Expo Go), é necessário **ajustar o IP da máquina host no arquivo:**
+
+📄 `src/services/api.js`
+
+```js
+// Exemplo:
+const api = axios.create({
+  baseURL: "http://SEU_IP_LOCAL:8080",
+});
+```
+
+Substitua `SEU_IP_LOCAL` pelo IP da sua máquina na rede.
+Para descobrir o IP local:
+
+* **Windows (cmd):** `ipconfig`
+* **Mac/Linux (terminal):** `ifconfig`
+
+Procure por algo como `192.168.x.x` ou `10.0.x.x`.
+
 
 ## Iniciando o Projeto
 
-Siga estes passos para configurar e executar o projeto localmente:
+1. **Clonar o Repositório**
+```bash
+git clone https://github.com/Mauricio-Pereira/Challenge-Odontoprev-Mobile
+cd Challenge-Odontoprev-Mobile
+````
 
-1. **Clonar o Repositório**  
-   ```sh
-   git clone https://github.com/Mauricio-Pereira/Challenge-Odontoprev-Mobile
-   cd Challenge-Odontoprev-Mobile
-   ```
+2. **Instalar as Dependências**
 
-2. **Instalar Dependências**  
-   Certifique-se de ter o Node.js instalado. Em seguida, rode:
-   ```sh
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. **Iniciar o Servidor Expo**  
-   Inicie o servidor de desenvolvimento do Expo:
-   ```sh
-   npm start
-   ```
-   Isso vai abrir o Expo Dev Tools no seu navegador. Você pode rodar o app em um emulador ou escanear o QR code com o aplicativo Expo Go no seu dispositivo móvel.
+3. **Rodar o Projeto**
+
+```bash
+npm start
+```
+
+> Escaneie o QR Code com o aplicativo **Expo Go** no seu celular.
 
 ## Instalação
 
-- **Node.js:** Baixe e instale do [site oficial](https://nodejs.org/).  
-- **Expo CLI:** Instale globalmente com:
-  ```sh
-  npm install -g expo-cli
-  ```
-- **Emuladores Android/iOS:** Para desenvolvimento mobile, instale Android Studio ou Xcode conforme necessário.
+* **Node.js**: [https://nodejs.org](https://nodejs.org)
+* **Expo CLI**:
+
+```bash
+npm install -g expo-cli
+```
+
+* **Backend Java API**: Clonar e rodar o projeto `FraudWatch-Java` em Docker ou localmente para ativar os endpoints REST que o app consome. Uma Explicação mais detalhada foi feita acima.
 
 ## Scripts
 
-Scripts úteis definidos no `package.json`:
-
-- **Iniciar o Expo:**  
-  ```sh
-  npm start
-  ```
-- **Rodar no Android:**  
-  ```sh
-  npm run android
-  ```
-- **Rodar no iOS:**  
-  ```sh
-  npm run ios
-  ```
-- **Rodar no Web (se configurado):**  
-  ```sh
-  npm run web
-  ```
+```bash
+npm start        # Inicia o Expo
+npm run android  # Roda no Android (se emulador estiver ativo)
+npm run ios      # Roda no iOS (Mac + Xcode)
+npm run web      # Abre versão web (experimental)
+```
 
 ## Dependências
 
-Algumas das principais bibliotecas e ferramentas usadas neste projeto:
-
-- **React Native & Expo:** Base para desenvolvimento e deploy do app.
-- **React Navigation:** Para gerenciar a navegação entre telas.
-- **react-native-masked-text:** Para máscaras de input (CPF, telefone etc.).
-- **Axios/Fetch:** (Se aplicável) para chamadas de API e busca de CEP.
-- **Bibliotecas Adicionais:** Verifique o `package.json` para a lista completa.
+* **React Native / Expo**
+* **React Navigation**
+* **Axios**
+* **Async Storage**
+* **react-native-masked-text** (máscaras de input)
+* **Outras**: consultar `package.json` para detalhes.
 
 ## Uso
 
-Após iniciar o projeto, você pode:
-- Criar conta e gerenciar a autenticação.
-- Inserir dados pessoais e de conta com validações em tempo real.
-- Usar máscaras de input e buscas de CEP.
+* Criar uma conta preenchendo nome, endereço e dados de acesso.
+* Login com persistência de sessão via Async Storage.
+* Usuários com perfil **Administrador** visualizam todos os usuários e podem editar/excluir.
+* Somente o Administrador do sistema pode criar outros usuários do tipo administrador, feita pela plataforma spring mvc.
+* Dados validados antes de enviar (formatos corretos de CPF, telefone, etc).
+* Integração 100% funcional com a API Java FraudWatch (via Docker ou local).
 
 ## Contribuintes
 
-- RM553542 Luiz Otávio - 2TDSPR  
-- RM553483 Vitor de Melo - 2TDSPR  
-- RM553748 Mauricio Pereira - 2TDSPC  
+* RM553542 Luiz Otávio – 2TDSPR
+* RM553483 Vitor de Melo – 2TDSPR
+* RM553748 Mauricio Pereira – 2TDSPC
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT.  
-Sinta-se à vontade para usar, modificar e distribuir de acordo com os termos do licenciamento.
+Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licenses/MIT).
+
+
